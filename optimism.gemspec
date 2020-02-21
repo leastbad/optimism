@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-nav"
   spec.add_development_dependency "standardrb"
   spec.add_dependency "rack"
+  spec.add_dependency "nokogiri"
   spec.add_dependency "rails", ">= 5.2"
   spec.add_dependency "cable_ready", "~> 4.0.9"
 end
