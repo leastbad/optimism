@@ -1,4 +1,5 @@
 require "optimism/version"
+require "optimism/railtie"
 
 module Optimism
   include CableReady::Broadcaster
