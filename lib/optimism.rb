@@ -1,5 +1,6 @@
+require "cable_ready"
 require "optimism/version"
-require "optimism/railtie"
+require "optimism/railtie" if defined?(Rails)
 
 module Optimism
   include CableReady::Broadcaster
