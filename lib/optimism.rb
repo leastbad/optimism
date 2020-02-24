@@ -84,8 +84,8 @@ end
 
 module ActionView::Helpers
   class FormBuilder
-    def error_for(attribute)
-      ActionController::Base.helpers.content_tag :span, nil, id: error_id_for(attribute), class: Optimism.error_class
+    def error_for(attribute, css = "")
+      ActionController::Base.helpers.content_tag :span, nil, id: error_id_for(attribute), class: css
     end
 
     def error_id_for(attribute)
