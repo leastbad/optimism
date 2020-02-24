@@ -4,13 +4,13 @@ description: The missing drop-in solution for realtime remote form validation in
 
 # Welcome
 
-### Why have optimism?
+## Why have optimism?
 
 [Optimism](https://github.com/leastbad/optimism) is an MIT-licensed [Ruby on Rails](https://rubyonrails.org/) gem that makes it easy to give your users instant constructive feedback if they enter invalid data into your application. Instead of dumping a list of errors at the top of your interface, Optimism provides specific instructions directly beside or below individual input elements.
 
 ![](.gitbook/assets/fill_forms.svg)
 
-### Is optimism for you?
+## Is optimism for you?
 
 If you care about reducing churn and giving your users the best experience possible, Optimism is a great way to achieve your UX goals without having to waste time writing repetitive and brittle validation code. Properly constrained and highly opinionated, you'll be able to keep your validation logic on the server where it belongs without sacrificing the immediate response of a reactive Single Page App. Whether you're working on a complex multi-element form with a traditional Submit button or a dynamic search that delivers results as you type, Optimism chops, grinds, slices and dices your validation concerns away.
 
@@ -18,7 +18,7 @@ If you care about reducing churn and giving your users the best experience possi
 
 Optimism is safe and approved for all diets, religions and political appetites. Many developers find that Optimism is highly addictive and lowers stress when applied regularly.
 
-### How does optimism work?
+## How does optimism work?
 
 Rails applications receive requests to update database records based on a list of proposed changes that come from a ~~dog~~ user submitting a form in their browser. If all proposed changes can be made without breaking any business rules, ActiveRecord can update the email address and age of the ~~dog~~ user. Optimism kicks in when `user_params = {email: 7, age: "bark_ruffalo@gmail.com"}`.
 
@@ -26,18 +26,18 @@ When a model validation error prevents an update from succeeding, Optimism build
 
 ![](.gitbook/assets/loading.svg)
 
-### Key features and advantages
+## Key features and advantages
 
-- [x] Easy to learn, quick to implement
-- [x] Plays well with existing tools such as [StimulusReflex](https://github.com/hopsoft/stimulus_reflex), [Turbolinks](https://github.com/turbolinks/turbolinks) and even [jQuery](https://jquery.com/)
-- [x] Contextual user feedback in a few milliseconds
-- [x] Supports form-based and in-line edit scenarios equally well
-- [x] Optional support for emitting DOM events
-- [x] Highly configurable via an optional initializer file
-- [x] CSS framework agnostic with Bootstrap and vanilla samples provided
-- [x] Lightweight, coming in at less than 100 LOC
+* [x] Easy to learn, quick to implement
+* [x] Plays well with existing tools such as [StimulusReflex](https://github.com/hopsoft/stimulus_reflex), [Turbolinks](https://github.com/turbolinks/turbolinks) and even [jQuery](https://jquery.com/)
+* [x] Contextual user feedback in a few milliseconds
+* [x] Supports form-based and in-line edit scenarios equally well
+* [x] Optional support for emitting DOM events
+* [x] Highly configurable via an optional initializer file
+* [x] CSS framework agnostic with Bootstrap and vanilla samples provided
+* [x] Lightweight, coming in at roughly 100 LOC
 
-### Try it now
+## Try it now
 
 The project repository lives on Github at [https://github.com/leastbad/optimism](https://github.com/leastbad/optimism)
 
@@ -50,3 +50,4 @@ Even better, the source code for the demo is [available on Github](https://githu
 {% endhint %}
 
 Excited? Great! Let's install [Optimism](https://github.com/leastbad/optimism) in your Rails app now.
+
