@@ -84,8 +84,12 @@ end
 
 module ActionView::Helpers
   class FormBuilder
-    def error_for(attribute, css = "")
-      ActionController::Base.helpers.content_tag :span, nil, id: error_id_for(attribute), class: css
+    def error_for(attribute, **options)
+      @template.tag.span options.merge! id: error_id_for(attribute)
+    end
+
+    def container_for(attribute, **options, &block)
+      @template.tag.div @template.capture(&block), options.merge!(id: container_id_for(attribute)) if block_given?
     end
 
     def error_id_for(attribute)
