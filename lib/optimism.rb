@@ -84,6 +84,10 @@ end
 
 module ActionView::Helpers
   class FormBuilder
+    def error_for(attribute)
+      ActionController::Base.helpers.content_tag :span, nil, id: error_id_for(attribute), class: Optimism.error_class
+    end
+
     def error_id_for(attribute)
       Optimism.error_selector.sub("RESOURCE", object_name.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
     end
