@@ -40,11 +40,11 @@ When a model validation error prevents an update from succeeding, Optimism build
 
 ## Try it now
 
-The project repository lives on Github at [https://github.com/leastbad/optimism](https://github.com/leastbad/optimism)
+The project repository lives on Github at [https://github.com/leastbad/optimism](https://github.com/leastbad/optimism) and this documentation is available at [https://optimism.leastbad.com](https://optimism.leastbad.com)
 
 There's a live demo that you can try right now at [https://optimism-demo.herokuapp.com](https://optimism-demo.herokuapp.com/)
 
 Even better, the source code for the demo is [available on Github](https://github.com/leastbad/optimism). The project README lists every step required to build the demo application from scratch in about five minutes.
 
-Excited? Great! Let's install [Optimism](https://github.com/leastbad/optimism) in your Rails app now.
+Excited? Great! Let's [setup Optimism](https://optimism.leastbad.com/setup) in your Rails app now.
 
