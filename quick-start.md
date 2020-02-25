@@ -66,11 +66,13 @@ Eagle-eyed readers will see that setting up a bare-bones Optimism integration re
 2. Remove the error messages block from lines 2-12 entirely
 3. Add an `error_for` helper for each attribute
 
+The `error_for` helper creates an empty `span` tag with an id such as _post\_body\_error_, and this is where the error messages for the body attribute will appear. `error_for` will be covered in more detail soon.
+
 {% hint style="success" %}
 Even though `form_with` is remote-by-default, many developers were confused and frustrated by the lack of opinionated validation handling out of the box for remote forms. Since scaffolds are for new users to get comfortable, remote forms are disabled. This is the primary reason that Optimism was created: we want our tasty remote forms without any heartburn.
 {% endhint %}
 
-That's all there is to it. While plain, you now have live form validations being delivered over websockets.
+That's all there is to it. You now have live - if _unstyled_ - form validations being delivered over websockets.
 
 ![](.gitbook/assets/high_five.svg)
 

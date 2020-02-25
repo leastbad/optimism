@@ -29,6 +29,7 @@ When a model validation error prevents an update from succeeding, Optimism build
 ## Key features and advantages
 
 * [x] Easy to learn, quick to implement
+* [x] Automatically handles multi-level nested forms
 * [x] Plays well with existing tools such as [StimulusReflex](https://github.com/hopsoft/stimulus_reflex), [Turbolinks](https://github.com/turbolinks/turbolinks) and even [jQuery](https://jquery.com/)
 * [x] Contextual user feedback in a few milliseconds
 * [x] Supports form-based and in-line edit scenarios equally well
@@ -41,7 +42,7 @@ When a model validation error prevents an update from succeeding, Optimism build
 
 The project repository lives on Github at [https://github.com/leastbad/optimism](https://github.com/leastbad/optimism)
 
-There's a live demo that you can try right now at [https://optimism-demo.herokuapp.com/](https://optimism-demo.herokuapp.com/)
+There's a live demo that you can try right now at [https://optimism-demo.herokuapp.com](https://optimism-demo.herokuapp.com/)
 
 Even better, the source code for the demo is [available on Github](https://github.com/leastbad/optimism). The project README lists every step required to build the demo application from scratch in about five minutes.
 
