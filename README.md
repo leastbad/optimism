@@ -1,8 +1,8 @@
-# Optimism
+# Welcome
 
 [![GitHub stars](https://img.shields.io/github/stars/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![GitHub forks](https://img.shields.io/github/forks/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![Twitter follow](https://img.shields.io/twitter/follow/theleastbad?style=social)](https://twitter.com/theleastbad)
 
-> The missing drop-in solution for realtime remote form validation in Rails
+The missing drop-in solution for realtime remote form validation in Rails
 
 ## Why have optimism?
 
@@ -12,9 +12,9 @@
 
 ## Is optimism for you?
 
-If you care about reducing churn and giving your users the best experience possible, Optimism is a great way to achieve your UX goals without having to waste time writing repetitive and brittle validation code. Properly constrained and highly opinionated, you'll be able to keep your validation logic on the server where it belongs without sacrificing the immediate response of a reactive Single Page App. Whether you're working on a complex multi-element form with a traditional Submit button or a dynamic search that delivers results as you type, Optimism chops, grinds, slices and dices your validation concerns away.
+Are you trying to use remote forms but feeling frustrated by their inflexibility? You need to mainline a dose of Optimism, stat!
 
-> Are you trying to use [remote forms](https://guides.rubyonrails.org/working_with_javascript_in_rails.html#form-with) but feeling frustrated by their inflexibility? You need to mainline a dose of Optimism, _stat!_
+If you care about reducing churn and giving your users the best experience possible, Optimism is a great way to achieve your UX goals without having to waste time writing repetitive and brittle validation code. Properly constrained and highly opinionated, you'll be able to keep your validation logic on the server where it belongs without sacrificing the immediate response of a reactive Single Page App. Whether you're working on a complex multi-element form with a traditional Submit button or a dynamic search that delivers results as you type, Optimism chops, grinds, slices and dices your validation concerns away.
 
 Optimism is safe and approved for all diets, religions and political appetites. Many developers find that Optimism is highly addictive and lowers stress when applied regularly.
 
