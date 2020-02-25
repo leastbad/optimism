@@ -2,16 +2,6 @@
 
 Let's start with the simplest scenario possible: you have a form with multiple input elements, and when the user clicks on the Submit button you want to display any validation error messages beside the elements that have issues. When the user resolves these issues and clicks the Submit button, the form is processed normal and the page navigates to whatever comes next.
 
-#### Model
-
-Validations are covered in-depth by the [official documentation](https://guides.rubyonrails.org/active_record_validations.html#validation-helpers). Optimism doesn't require anything special.
-
-{% hint style="info" %}
-Optimism is designed for ActiveRecord models that have validations defined, although it should work with any Ruby class that implements [Active Model](https://guides.rubyonrails.org/active_model_basics.html) and has an `errors` accessor.
-{% endhint %}
-
-#### View
-
 Here's sample form partial for a Post model. It has two attributes - **name** and **body** and was generated with a Rails scaffold command.
 
 {% code title="app/views/posts/\_form.html.erb BEFORE Optimism" %}
