@@ -2,20 +2,10 @@
 
 Let's start with the simplest scenario possible: you have a form with multiple input elements, and when the user clicks on the Submit button you want to display any validation error messages beside the elements that have issues. When the user resolves these issues and clicks the Submit button, the form is processed normal and the page navigates to whatever comes next.
 
-#### Model
-
-Validations are covered in-depth by the [official documentation](https://guides.rubyonrails.org/active_record_validations.html#validation-helpers). Optimism doesn't require anything special.
-
-{% hint style="info" %}
-Optimism is designed for ActiveRecord models that have validations defined, although it should work with any Ruby class that implements [Active Model](https://guides.rubyonrails.org/active_model_basics.html) and has an `errors` accessor.
-{% endhint %}
-
-#### View
-
 Here's sample form partial for a Post model. It has two attributes - **name** and **body** and was generated with a Rails scaffold command.
 
 {% code title="app/views/posts/\_form.html.erb BEFORE Optimism" %}
-```rust
+```ruby
 <%= form_with(model: post, local: true) do |form| %>
   <% if post.errors.any? %>
     <div id="error_explanation">
@@ -49,7 +39,7 @@ Here's sample form partial for a Post model. It has two attributes - **name** an
 And here is that same form partial, configured to work with Optimism:
 
 {% code title="app/views/posts/\_form.html.erb AFTER Optimism" %}
-```rust
+```ruby
 <%= form_with(model: post) do |form| %>
   <div class="field">
     <%= form.label :name %>
@@ -76,148 +66,15 @@ Eagle-eyed readers will see that setting up a bare-bones Optimism integration re
 2. Remove the error messages block from lines 2-12 entirely
 3. Add an `error_for` helper for each attribute
 
-The `error_for` helper creates an empty `span` tag with an id such as _posts\_body\_error_, and this is where the error messages for the body attribute will appear.
-
 {% hint style="success" %}
 Even though `form_with` is remote-by-default, many developers were confused and frustrated by the lack of opinionated validation handling out of the box for remote forms. Since scaffolds are for new users to get comfortable, remote forms are disabled. This is the primary reason that Optimism was created: we want our tasty remote forms without any heartburn.
 {% endhint %}
 
-#### Controller
-
-The last step is to slightly modify the **create** and **update** actions in our PostsController. The other actions have been removed for brevity:
-
-{% code title="app/controllers/posts\_controller.rb" %}
-```ruby
-  def create
-    @post = Post.new(post_params)
-    respond_to do |format|
-      if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
-      else
-        format.html { broadcast_errors @post, post_params }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def update
-    respond_to do |format|
-      if @post.update(post_params)
-        format.html { redirect_to @post, notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post }
-      else
-        format.html { broadcast_errors @post, post_params }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-```
-{% endcode %}
-
-The only meaningful change required \(as seen on lines 8 and 20 in this example\) is to replace `render :new` and `render :edit` with a call to `broadcast_errors` which has two mandatory parameters: the model instance and the list of attributes to validate. Usually this is the whitelisted params hash, but you can pass a subset as small as one attribute to be validated.
-
-That's all there is to it. You now have live - if _unstyled_ - form validations being delivered over websockets.
+That's all there is to it. While plain, you now have live form validations being delivered over websockets.
 
 ![](.gitbook/assets/high_five.svg)
 
-### Typical Usage
-
-Now that you have seen what Optimism can do, let's flex our muscles a bit and see how far this goes.
-
-{% tabs %}
-{% tab title="Vanilla Rails Scaffold" %}
-{% code title="app/views/posts/\_form.html.erb" %}
-```rust
-<%= form_with(model: post, id: "posts_form") do |form| %>
-  <%= form.container_for :name, class: "field" do %>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-    <%= form.error_for :name, class: "danger hide" %>
-  <% end %>
-
-  <%= form.container_for :body, class: "field" do %>
-    <%= form.label :body %>
-    <%= form.text_area :body %>
-    <%= form.error_for :body, class: "danger hide" %>
-  <% end %>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
-```
-{% endcode %}
-{% endtab %}
-
-{% tab title="Bootstrap 4" %}
-{% code title="app/views/posts/\_form.html.erb" %}
-```rust
-<%= form_with(model: post, id: "posts_form") do |form| %>
-  <%= form.container_for :name, class: "form-group" do %>
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control" %>
-    <%= form.error_for :name, class: "small align-bottom text-danger d-none" %>
-  <% end %>
-
-  <%= form.container_for :body, class: "form-group" do %>
-    <%= form.label :body %>
-    <%= form.text_area :body, class: "form-control" %>
-    <%= form.error_for :body, class: "small align-bottom text-danger d-none" %>
-  <% end %>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
-```
-{% endcode %}
-{% endtab %}
-{% endtabs %}
-
-Here we introduce the `container_for` helper, which wraps a form element in a `div` that has an id similar to the `error_for` helper, except you're looking at _posts\_body\_container_. More importantly, the container receives a CSS class called _error_ that can be used to change the visual characteristics of the error message as well as the input element itself. **It is this interplay between cascading style and the order in which the styles are declared that makes this approach work.** Consider the following CSS:
-
-{% tabs %}
-{% tab title="Vanilla Rails Scaffold" %}
-```css
-.danger {
-  color: red;
-}
-
-.hide {
-  display: none;
-}
-
-.field.error > .hide {
-  display: block;
-}
-
-.field.error > input,
-.field.error > textarea {
-  background-color: rgba(255, 239, 213, 0.7);
-}
-```
-{% endtab %}
-
-{% tab title="Bootstrap 4" %}
-```css
-.form-group.error > .d-none {
-  display: inline !important;
-}
-
-.form-group.error > input,
-.form-group.error > textarea {
-  background-color: rgba(255, 239, 213, 0.7);
-}
-```
-{% endtab %}
-{% endtabs %}
-
-When there is a validation error on an input element, the error message is injected into the span and an _error_ CSS class is added to the container for that element. This results in a cascade where **the class responsible for hiding the error message is now flipped to display it instead**. In this example, we also show how we can change the visual characteristics of the input elements themselves, in this case making the background color a sickly and distressing translucent peach. It really helps sell the urgency.
-
-If you assign an id to the form itself that matches the expected format - in this case, `posts_form` - Optimism will also place an _invalid_ class on the form if there are _any_ errors at all. This gives the developer the flexibility to demonstrate an error state at the form level by tweaking how the form is displayed.
-
 {% hint style="info" %}
-Unfortunately, we can't automatically generate the id for the form during its own declaration. Luckily, the format is pretty easy: **resources\_form**.
+Optimism is designed to work with ActiveRecord models that have [validations](https://guides.rubyonrails.org/active_record_validations.html#validation-helpers) defined, although it should work with any Ruby class that implements [Active Model](https://guides.rubyonrails.org/active_model_basics.html) and has an `errors` accessor.
 {% endhint %}
 
