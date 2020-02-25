@@ -4,6 +4,10 @@ description: The missing drop-in solution for realtime remote form validation in
 
 # Welcome
 
+## Optimism
+
+> The missing drop-in solution for realtime remote form validation in Rails
+
 ## Why have optimism?
 
 [Optimism](https://github.com/leastbad/optimism) is an MIT-licensed [Ruby on Rails](https://rubyonrails.org/) gem that makes it easy to give your users instant constructive feedback if they enter invalid data into your application. Instead of dumping a list of errors at the top of your interface, Optimism provides specific instructions directly beside or below individual input elements.
