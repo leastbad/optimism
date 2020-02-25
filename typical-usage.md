@@ -81,7 +81,6 @@ Here we introduce the `container_for` helper, which wraps a form element in a `d
 ```
 
 {% endtab %}
-
 {% tab title="Bootstrap 4" %}
 
 ```css
