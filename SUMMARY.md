@@ -1,7 +1,6 @@
 # Table of contents
 
-* [Welcome](README.md)
-* [Setup](setup.md)
-* [Quick Start](quick-start.md)
-* [Untitled](untitled.md)
-
+- [Welcome](README.md)
+- [Setup](setup.md)
+- [Quick Start](quick-start.md)
+- [Typical Usage](typical-usage.md)

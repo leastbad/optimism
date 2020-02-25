@@ -49,6 +49,7 @@ module Optimism
       cable_ready[Optimism.channel].remove_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
     end
     cable_ready.broadcast
+    head :ok
   end
 
   def process_resource(model, attributes, ancestry)
