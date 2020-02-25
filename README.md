@@ -1,10 +1,6 @@
----
-description: The missing drop-in solution for realtime remote form validation in Rails
----
+# Optimism
 
-# Welcome
-
-## Optimism
+[![GitHub stars](https://img.shields.io/github/stars/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![GitHub forks](https://img.shields.io/github/forks/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![Twitter follow](https://img.shields.io/twitter/follow/theleastbad?style=social)](https://twitter.com/theleastbad)
 
 > The missing drop-in solution for realtime remote form validation in Rails
 
@@ -49,10 +45,6 @@ The project repository lives on Github at [https://github.com/leastbad/optimism]
 There's a live demo that you can try right now at [https://optimism-demo.herokuapp.com](https://optimism-demo.herokuapp.com/)
 
 Even better, the source code for the demo is [available on Github](https://github.com/leastbad/optimism). The project README lists every step required to build the demo application from scratch in about five minutes.
-
-{% hint style="success" %}
-**Get Involved.** We'd love to hear from you. [![GitHub stars](https://img.shields.io/github/stars/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![GitHub forks](https://img.shields.io/github/forks/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![Twitter follow](https://img.shields.io/twitter/follow/theleastbad?style=social)](https://twitter.com/theleastbad)
-{% endhint %}
 
 Excited? Great! Let's install [Optimism](https://github.com/leastbad/optimism) in your Rails app now.
 
