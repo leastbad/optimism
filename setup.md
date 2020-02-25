@@ -18,6 +18,10 @@ The terminal commands above will ensure that Optimism is installed. It creates t
 
 ![](.gitbook/assets/setup.svg)
 
+{% hint style="info" %}
+Optimism is designed for ActiveRecord models that have [validations](https://guides.rubyonrails.org/active_record_validations.html#validation-helpers) defined, although it should work with any Ruby class that implements [Active Model](https://guides.rubyonrails.org/active_model_basics.html) and has an `errors` accessor.
+{% endhint %}
+
 ### Logging
 
 In the default _debug_ log level, ActionCable emits particularly verbose log messages. You can optionally discard everything but exceptions by switching to the _warn_ log level, as is common in development environments:
