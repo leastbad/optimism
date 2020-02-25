@@ -1,8 +1,8 @@
-# Welcome
+# Optimism
 
 [![GitHub stars](https://img.shields.io/github/stars/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![GitHub forks](https://img.shields.io/github/forks/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![Twitter follow](https://img.shields.io/twitter/follow/theleastbad?style=social)](https://twitter.com/theleastbad)
 
-The missing drop-in solution for realtime remote form validation in Rails
+The missing drop-in solution for realtime remote form validation in Rails.
 
 ## Why have optimism?
 
