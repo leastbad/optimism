@@ -155,5 +155,5 @@ Detail: resource, attribute, text
 Event: **optimism:attribute:valid**  
 Detail: resource, attribute
 
-One of these events will fire for each attribute, depending on whether that attribute is valid. Resource is the pluralized class name of the Active Record model, eg. `posts`. Attribute is hopefully self-explanatory. Text is the text content of the validation error message.
+One of these events will fire **for each attribute**, depending on whether that attribute is valid. Resource is the pluralized class name of the Active Record model, eg. `posts`. Attribute is hopefully self-explanatory. Text is the text content of the validation error message.
 
