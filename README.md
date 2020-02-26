@@ -1,4 +1,4 @@
-# Optimism
+# Welcome
 
 [![GitHub stars](https://img.shields.io/github/stars/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![GitHub forks](https://img.shields.io/github/forks/leastbad/optimism?style=social)](https://github.com/leastbad/optimism) [![Twitter follow](https://img.shields.io/twitter/follow/theleastbad?style=social)](https://twitter.com/theleastbad)
 
@@ -46,5 +46,5 @@ There's a live demo that you can try right now at [https://optimism-demo.herokua
 
 Even better, the source code for the demo is [available on Github](https://github.com/leastbad/optimism). The project README lists every step required to build the demo application from scratch in about five minutes.
 
-Excited? Great! Let's [setup Optimism](https://optimism.leastbad.com/setup) in your Rails app now.
+Excited? Great! Let's [setup Optimism](https://optimism.leastbad.com/setup) in your Rails application now.
 
