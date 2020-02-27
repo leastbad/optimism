@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    optimism (0.2.8)
+    optimism (0.2.9)
       cable_ready (~> 4.0.9)
       rack
       rails (>= 5.2)

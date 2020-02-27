@@ -40,11 +40,11 @@ module Optimism
     end
     process_resource(model, attributes, [resource])
     if model.errors.any?
-      cable_ready[Optimism.channel].dispatch_event(event: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
+      cable_ready[Optimism.channel].dispatch_event(name: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
       cable_ready[Optimism.channel].add_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
       cable_ready[Optimism.channel].set_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
     else
-      cable_ready[Optimism.channel].dispatch_event(event: "optimism:form:valid", detail: {resource: resource}) if Optimism.emit_events
+      cable_ready[Optimism.channel].dispatch_event(name: "optimism:form:valid", detail: {resource: resource}) if Optimism.emit_events
       cable_ready[Optimism.channel].remove_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
       cable_ready[Optimism.channel].remove_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
     end
@@ -72,11 +72,11 @@ module Optimism
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
     if model.errors.messages.map(&:first).include?(attribute.to_sym)
       message = "#{attribute.humanize} #{model.errors.messages[attribute.to_sym].first}#{Optimism.suffix}"
-      cable_ready[Optimism.channel].dispatch_event(event: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
+      cable_ready[Optimism.channel].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
       cable_ready[Optimism.channel].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
       cable_ready[Optimism.channel].text_content(selector: error_selector, text: message) if Optimism.inject_inline
     else
-      cable_ready[Optimism.channel].dispatch_event(event: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
+      cable_ready[Optimism.channel].dispatch_event(name: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
       cable_ready[Optimism.channel].remove_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
       cable_ready[Optimism.channel].text_content(selector: error_selector, text: "") if Optimism.inject_inline
     end
