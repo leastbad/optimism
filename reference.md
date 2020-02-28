@@ -84,6 +84,8 @@ Returns the id required for a container to receive validation error text. Use it
 
 
 
+![](.gitbook/assets/master_plan.svg)
+
 ## Initializer
 
 Optimism is configurable via an optional initializer file. As with all initializers, changes only take effect after your Rails server has been restarted. Here is a sample initializer file that contains all of the default values for the configuration of the library. All changes apply globally to all instances of Optimism.
@@ -137,6 +139,8 @@ end
 
 If you set the `emit_events` property to true in your initializer, Optimism will emit DOM events in response to validation errors. This can happen in addition to or instead of CSS and text updates. This is a great alternative for complicated integrations where you have legacy components which need to be notified of error conditions on the backend.
 
+In practical terms, DOM events give you tooling options and creative flexibility that are difficult to achieve with textual error messages and CSS error classes. It's simply a fact that no library can anticipate every design pattern or UI innovation. Today you might connect DOM events to a [toast notification library](https://www.jqueryscript.net/blog/Best-Toast-Notification-jQuery-Plugins.html#vanilla), but tomorrow there could be a mass proliferation of embedded ocular computers with sub-vocalization control interfaces, and we aren't going to tell you how those devices should punish users for bad input.
+
 ### Form-level events
 
 Event: **optimism:form:invalid**  
@@ -156,4 +160,6 @@ Event: **optimism:attribute:valid**
 Detail: resource, attribute
 
 One of these events will fire **for each attribute**, depending on whether that attribute is valid. Resource is the pluralized class name of the Active Record model, eg. `posts`. Attribute is hopefully self-explanatory. Text is the text content of the validation error message.
+
+![](.gitbook/assets/alien_science.svg)
 
