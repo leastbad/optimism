@@ -46,5 +46,5 @@ There's a live demo that you can try right now at [https://optimism-demo.herokua
 
 Even better, the source code for the demo is [available on Github](https://github.com/leastbad/optimism). The project README lists every step required to build the demo application from scratch in about five minutes.
 
-Excited? Great! Let's [setup Optimism](https://optimism.leastbad.com/setup) in your Rails application now.
+Excited? Great! Let's [setup Optimism](https://optimism.leastbad.com/setup) in your Rails application now. And if you're having any trouble at all, [drop by our Discord server](https://discord.gg/wKzsAYJ) for help.
 
