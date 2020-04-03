@@ -71,7 +71,7 @@ module Optimism
     resource += "_#{ancestry.shift}_attributes_#{ancestry.shift}" until ancestry.empty?
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
     if model.errors.messages.map(&:first).include?(attribute.to_sym)
-      message = "#{attribute.humanize} #{model.errors.messages[attribute.to_sym].first}#{Optimism.suffix}"
+      message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
       cable_ready[Optimism.channel].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
       cable_ready[Optimism.channel].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
       cable_ready[Optimism.channel].text_content(selector: error_selector, text: message) if Optimism.inject_inline
