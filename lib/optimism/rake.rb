@@ -9,7 +9,7 @@ task :"optimism:install" do
     {app_path: "app/channels/optimism_channel.rb", template_path: "../templates/optimism_channel.rb" },
   ]
 
-  FileUtils.mkdir_p "./app/javascript/channels"
+  FileUtils.mkdir_p "./#{app_path_part}/channels"
 
   CHANNELS.each do |channel|
     if File.exist?("./#{channel[:app_path]}")
