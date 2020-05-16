@@ -30,11 +30,11 @@ module Optimism
     form_selector, submit_selector = Optimism.form_selector.sub("RESOURCE", resource), Optimism.submit_selector.sub("RESOURCE", resource)
     attributes = case attributes
     when ActionController::Parameters, Hash, ActiveSupport::HashWithIndifferentAccess
-      attributes.to_h.keys
+      attributes.to_h
     when String, Symbol
-      [attributes.to_s]
+      { attributes.to_s => nil }
     when Array
-      attributes.flatten.map &:to_s
+      attributes.flatten.each.with_object(nil) { |attr, obj| obj[attr] = nil }
     else
       raise Exception.new "attributes must be a Hash (Parameters, Indifferent or standard), Array, Symbol or String"
     end
