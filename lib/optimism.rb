@@ -90,7 +90,7 @@ module ActionView::Helpers
     end
 
     def container_id_for(attribute)
-      Optimism.container_selector.sub("RESOURCE", object_name.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
+      Optimism.container_selector.sub("RESOURCE", object_name.to_s.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
     end
 
     def error_for(attribute, **options)
@@ -98,7 +98,7 @@ module ActionView::Helpers
     end
 
     def error_id_for(attribute)
-      Optimism.error_selector.sub("RESOURCE", object_name.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
+      Optimism.error_selector.sub("RESOURCE", object_name.to_s.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
     end
   end
 end
