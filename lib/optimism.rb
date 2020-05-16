@@ -34,7 +34,7 @@ module Optimism
     when String, Symbol
       { attributes.to_s => nil }
     when Array
-      attributes.flatten.each.with_object(nil) { |attr, obj| obj[attr.to_s] = nil }
+      attributes.flatten.each.with_object({}) { |attr, obj| obj[attr.to_s] = nil }
     else
       raise Exception.new "attributes must be a Hash (Parameters, Indifferent or standard), Array, Symbol or String"
     end
