@@ -26,20 +26,20 @@ module Optimism
 
   def broadcast_errors(model, attributes)
     return unless model&.errors&.messages
-    resource = model.class.to_s.downcase
+    resource = model.class.to_s.underscore
     form_selector, submit_selector = Optimism.form_selector.sub("RESOURCE", resource), Optimism.submit_selector.sub("RESOURCE", resource)
     attributes = case attributes
     when ActionController::Parameters, Hash, ActiveSupport::HashWithIndifferentAccess
-      attributes.to_h.keys
+      attributes.to_h
     when String, Symbol
-      [attributes.to_s]
+      { attributes.to_s => nil }
     when Array
-      attributes.flatten.map &:to_s
+      attributes.flatten.each.with_object({}) { |attr, obj| obj[attr.to_s] = nil }
     else
       raise Exception.new "attributes must be a Hash (Parameters, Indifferent or standard), Array, Symbol or String"
     end
     process_resource(model, attributes, [resource])
-    if model.errors.any?
+    if model.invalid?
       cable_ready[Optimism.channel].dispatch_event(name: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
       cable_ready[Optimism.channel].add_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
       cable_ready[Optimism.channel].set_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
@@ -49,11 +49,11 @@ module Optimism
       cable_ready[Optimism.channel].remove_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
     end
     cable_ready.broadcast
-    head :ok
+    head :ok if defined?(head)
   end
 
   def process_resource(model, attributes, ancestry)
-    attributes.each do |attribute|
+    attributes.keys.each do |attribute|
       if attribute.ends_with?("_attributes")
         resource = attribute[0..-12]
         nested_models = model.send(resource.to_sym)
@@ -70,7 +70,7 @@ module Optimism
     resource = ancestry.shift
     resource += "_#{ancestry.shift}_attributes_#{ancestry.shift}" until ancestry.empty?
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
-    if model.errors.messages.map(&:first).include?(attribute.to_sym)
+    if model.invalid? && model.errors.messages.map(&:first).include?(attribute.to_sym)
       message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
       cable_ready[Optimism.channel].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
       cable_ready[Optimism.channel].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
@@ -90,7 +90,7 @@ module ActionView::Helpers
     end
 
     def container_id_for(attribute)
-      Optimism.container_selector.sub("RESOURCE", object_name.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
+      Optimism.container_selector.sub("RESOURCE", object_name.to_s.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
     end
 
     def error_for(attribute, **options)
@@ -98,7 +98,7 @@ module ActionView::Helpers
     end
 
     def error_id_for(attribute)
-      Optimism.error_selector.sub("RESOURCE", object_name.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
+      Optimism.error_selector.sub("RESOURCE", object_name.to_s.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
     end
   end
 end
