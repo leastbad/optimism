@@ -6,7 +6,7 @@ module Optimism
   include CableReady::Broadcaster
   class << self
     mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
-    self.channel = ->(context) { OptimismChannel.broadcasting_for(context.current_user) }
+    self.channel = ->(context) { "OptimismChannel" }
     self.form_class = "invalid"
     self.error_class = "error"
     self.disable_submit = false
@@ -38,8 +38,9 @@ module Optimism
     else
       raise Exception.new "attributes must be a Hash (Parameters, Indifferent or standard), Array, Symbol or String"
     end
+    model.valid? if model.errors.empty?
     process_resource(model, attributes, [resource])
-    if model.invalid?
+    if model.errors.any?
       cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].add_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
       cable_ready[Optimism.channel[self]].set_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
@@ -70,7 +71,7 @@ module Optimism
     resource = ancestry.shift
     resource += "_#{ancestry.shift}_attributes_#{ancestry.shift}" until ancestry.empty?
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
-    if model.invalid? && model.errors.messages.map(&:first).include?(attribute.to_sym)
+    if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
       message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
       cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
