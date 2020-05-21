@@ -1,5 +1,5 @@
 class OptimismChannel < ApplicationCable::Channel
   def subscribed
-    stream_for current_user
+    stream_from "OptimismChannel"
   end
 end

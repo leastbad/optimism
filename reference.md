@@ -93,7 +93,7 @@ Optimism is configurable via an optional initializer file. As with all initializ
 {% code title="config/initializers/optimism.rb" %}
 ```ruby
 Optimism.configure do |config|
-  config.channel = "OptimismChannel"
+  config.channel = ->(context) { "OptimismChannel" }
   config.form_class = "invalid"
   config.error_class = "error"
   config.disable_submit = false
@@ -109,7 +109,7 @@ end
 ```
 {% endcode %}
 
-**channel**: The ActionCable channel created by the `rake optimism:install` setup task. In most cases, you don't need to change this value. In fact, the only good reason to change this value is if you already have an OptimismChannel. If this describes you, congratulations on your optimism.
+**channel**: The ActionCable channel created by the `rake optimism:install` setup task. Good enough to get you up and running in development, you will need to pull your desired identifier from the context Optimism is running in and let the `broadcasting_for` method on `OptimismChannel` call the shots. Find out more on the [authentication](https://optimism.leastbad.com/authentication) page.
 
 **form\_class**: The CSS class that will be applied to the form if the id has been properly set eg. `posts_form` \(following the simple pattern **resources\_form**\). If form\_class is set to false or nil, no CSS class will be applied.
 
