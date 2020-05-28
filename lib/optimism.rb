@@ -57,9 +57,13 @@ module Optimism
     attributes.keys.each do |attribute|
       if attribute.ends_with?("_attributes")
         resource = attribute[0..-12]
-        nested_models = model.send(resource.to_sym)
-        nested_models.each_with_index do |nested, index|
-          process_resource(nested, attributes[attribute][index.to_s], ancestry + [resource, index]) if attributes[attribute].key?(index.to_s)
+        association = model.send(resource.to_sym)
+        if association.respond_to? :each_with_index
+          association.each_with_index do |nested, index|
+            process_resource(nested, attributes[attribute][index.to_s], ancestry + [resource, index]) if attributes[attribute].key?(index.to_s)
+          end
+        else
+          process_resource(association, attributes[attribute], ancestry + [resource])
         end
       else
         process_attribute(model, attribute, ancestry.dup)
@@ -69,7 +73,11 @@ module Optimism
 
   def process_attribute(model, attribute, ancestry)
     resource = ancestry.shift
-    resource += "_#{ancestry.shift}_attributes_#{ancestry.shift}" until ancestry.empty?
+    if ancestry.size == 1
+      resource += "_#{ancestry.shift}_attributes"
+    else
+      resource += "_#{ancestry.shift}_attributes_#{ancestry.shift}" until ancestry.empty?
+    end
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
     if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
       message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
