@@ -5,7 +5,7 @@ require "optimism/railtie" if defined?(Rails)
 module Optimism
   include CableReady::Broadcaster
   class << self
-    mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
+    mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector, :raw_error_messages
     self.channel = ->(context) { "OptimismChannel" }
     self.form_class = "invalid"
     self.error_class = "error"
@@ -18,6 +18,7 @@ module Optimism
     self.error_selector = "#RESOURCE_ATTRIBUTE_error"
     self.form_selector = "#RESOURCE_form"
     self.submit_selector = "#RESOURCE_submit"
+    self.raw_error_messages = false
   end
 
   def self.configure(&block)
@@ -80,7 +81,12 @@ module Optimism
     end
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
     if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
-      message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
+      err_message = if Optimism.raw_error_messages
+                      model.errors.messages[attribute.to_sym].first
+                    else
+                      model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)
+                    end
+      message = "#{err_message}#{Optimism.suffix}"
       cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
       cable_ready[Optimism.channel[self]].text_content(selector: error_selector, text: message) if Optimism.inject_inline
