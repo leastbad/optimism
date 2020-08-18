@@ -118,15 +118,15 @@ module Optimism
     error_selector = Optimism.send(:_selector_for, :error, resource, attribute)
     
     if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
-      if attribute_name == false
-        attr_in_msg = :base
-      elsif attribute_name
-        attr_in_msg = attribute_name
+      err_msg = model.errors.messages[attribute.to_sym].first
+      if attribute_name
+        message = "#{attribute_name} #{err_msg}"
+      elsif attribute_name == false
+        message = err_msg
       else
-        attr_in_msg = attribute.to_sym
+        message = model.errors.full_message(attribute.to_sym, err_msg)
       end
-
-      message = "#{model.errors.full_message(attr_in_msg, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
+      message.squish!
 
       cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
