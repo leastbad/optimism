@@ -96,7 +96,7 @@ module Optimism
       full_message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
 
       # Build a 'raw' version out of the full message above by removing the attribute name from above
-      raw_message = "#{full_message.sub(attribute_name, '')}".squish
+      raw_message = "#{full_message.sub(attribute_name, '')}".strip
 
       cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: full_message}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
