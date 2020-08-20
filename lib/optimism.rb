@@ -5,10 +5,11 @@ require "optimism/railtie" if defined?(Rails)
 module Optimism
   include CableReady::Broadcaster
   class << self
-    mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
+    mattr_accessor :channel, :form_class, :error_class, :attribute_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
     self.channel = ->(context) { "OptimismChannel" }
     self.form_class = "invalid"
     self.error_class = "error"
+    self.attribute_class = "form-attr"
     self.disable_submit = false
     self.suffix = ""
     self.emit_events = false
@@ -18,6 +19,14 @@ module Optimism
     self.error_selector = "#RESOURCE_ATTRIBUTE_error"
     self.form_selector = "#RESOURCE_form"
     self.submit_selector = "#RESOURCE_submit"
+
+    private
+
+    def error_html(attribute = nil, message = nil)
+      error_html = "<span class=\"#{attribute_class}\">#{attribute}</span>"
+      error_html += " #{message}" if message
+      error_html
+    end
   end
 
   def self.configure(&block)
@@ -80,14 +89,22 @@ module Optimism
     end
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
     if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
-      message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
-      cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
+      # Build the attribute name the same way rails does in full_message
+      attribute_name = model.class.human_attribute_name(attribute, default: attribute.to_s.tr(".", "_").humanize)
+
+      # Build the full message as usual via full_message for internationalization support
+      full_message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
+
+      # Build a 'raw' version out of the full message above by removing the attribute name from above
+      raw_message = "#{full_message.sub(attribute_name, '')}".squish
+
+      cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: full_message}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
-      cable_ready[Optimism.channel[self]].text_content(selector: error_selector, text: message) if Optimism.inject_inline
+      cable_ready[Optimism.channel[self]].inner_html(selector: error_selector, html: Optimism.send(:error_html, attribute_name, raw_message)) if Optimism.inject_inline
     else
       cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
       cable_ready[Optimism.channel[self]].remove_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
-      cable_ready[Optimism.channel[self]].text_content(selector: error_selector, text: "") if Optimism.inject_inline
+      cable_ready[Optimism.channel[self]].inner_html(selector: error_selector, html: Optimism.send(:error_html)) if Optimism.inject_inline
     end
   end
 end
@@ -95,7 +112,7 @@ end
 module ActionView::Helpers
   class FormBuilder
     def container_for(attribute, **options, &block)
-      @template.tag.div @template.capture(&block), options.merge!(id: container_id_for(attribute)) if block_given?
+      @template.tag.div @template.capture(&block), options.merge(id: container_id_for(attribute)) if block_given?
     end
 
     def container_id_for(attribute)
@@ -103,7 +120,9 @@ module ActionView::Helpers
     end
 
     def error_for(attribute, **options)
-      @template.tag.span options.merge! id: error_id_for(attribute)
+      @template.tag.span(options.merge(id: error_id_for(attribute))) do
+        Optimism.send(:error_html).html_safe
+      end
     end
 
     def error_id_for(attribute)
