@@ -8,3 +8,5 @@
 /tmp/
 node_modules
 .vscode
+.rspec_status
+.byebug_history
