@@ -182,6 +182,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   bundler (~> 2.0)
   byebug (~> 11.1.3)
   optimism!
