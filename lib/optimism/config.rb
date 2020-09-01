@@ -54,9 +54,9 @@ module Optimism
 
     def self.configure_context_for(klass, &block)
       unless _context.include?(klass)
-        _context[klass] = Optimism::Config::Configuration.new(klass)
-
         parent_context = context_for(klass)
+
+        _context[klass] = Optimism::Config::Configuration.new(klass)
 
         options.each do |option|
           _context[klass].send("#{option}=", parent_context.send(option))
