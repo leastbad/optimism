@@ -93,6 +93,16 @@ module Optimism
 end
 
 module ActionView::Helpers
+  module FormHelper
+    def error_for(object_name, attribute, **options)
+      tag.span options.merge! id: error_id_for(object_name, attribute)
+    end
+
+    def error_id_for(object_name, attribute)
+      Optimism.error_selector.sub("RESOURCE", object_name.to_s.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
+    end
+  end
+
   class FormBuilder
     def container_for(attribute, **options, &block)
       @template.tag.div @template.capture(&block), options.merge!(id: container_id_for(attribute)) if block_given?
@@ -103,11 +113,7 @@ module ActionView::Helpers
     end
 
     def error_for(attribute, **options)
-      @template.tag.span options.merge! id: error_id_for(attribute)
-    end
-
-    def error_id_for(attribute)
-      Optimism.error_selector.sub("RESOURCE", object_name.to_s.delete("]").tr("[", "_")).sub("ATTRIBUTE", attribute.to_s)[1..-1]
+      @template.error_for(object_name, attribute, options)
     end
   end
 end
