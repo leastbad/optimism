@@ -4,21 +4,21 @@ require "optimism/railtie" if defined?(Rails)
 
 module Optimism
   include CableReady::Broadcaster
-  class << self
-    mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
-    self.channel = ->(context) { "OptimismChannel" }
-    self.form_class = "invalid"
-    self.error_class = "error"
-    self.disable_submit = false
-    self.suffix = ""
-    self.emit_events = false
-    self.add_css = true
-    self.inject_inline = true
-    self.container_selector = "#RESOURCE_ATTRIBUTE_container"
-    self.error_selector = "#RESOURCE_ATTRIBUTE_error"
-    self.form_selector = "#RESOURCE_form"
-    self.submit_selector = "#RESOURCE_submit"
-  end
+
+  mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
+
+  self.channel = ->(context) { "OptimismChannel" }
+  self.form_class = "invalid"
+  self.error_class = "error"
+  self.disable_submit = false
+  self.suffix = ""
+  self.emit_events = false
+  self.add_css = true
+  self.inject_inline = true
+  self.container_selector = "#RESOURCE_ATTRIBUTE_container"
+  self.error_selector = "#RESOURCE_ATTRIBUTE_error"
+  self.form_selector = "#RESOURCE_form"
+  self.submit_selector = "#RESOURCE_submit"
 
   def self.configure(&block)
     yield self
