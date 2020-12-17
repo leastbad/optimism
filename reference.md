@@ -93,7 +93,7 @@ Optimism is configurable via an optional initializer file. As with all initializ
 {% code title="config/initializers/optimism.rb" %}
 ```ruby
 Optimism.configure do |config|
-  config.channel = ->(context) { "OptimismChannel" }
+  config.channel_proc = ->(context) { "OptimismChannel" }
   config.form_class = "invalid"
   config.error_class = "error"
   config.disable_submit = false
