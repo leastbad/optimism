@@ -40,7 +40,7 @@ end
 
 We need to instruct ActionCable to stream updates on a per-session basis:
 
-{% code title="app/channels/optimism_channel.rb" %}
+{% code title="app/channels/optimism\_channel.rb" %}
 ```ruby
 class OptimismChannel < ApplicationCable::Channel
   def subscribed
@@ -55,7 +55,7 @@ Finally, we need to give Optimism the ability to broadcast updates to the correc
 {% code title="config/initializers/optimism.rb" %}
 ```ruby
 Optimism.configure do |config|
-  config.channel = ->(context) { OptimismChannel.broadcasting_for(context.session.id) }
+  config.channel_proc = ->(context) { OptimismChannel.broadcasting_for(context.session.id) }
 end
 ```
 {% endcode %}
@@ -98,7 +98,7 @@ end
 
 We need to instruct ActionCable to stream updates on a per-session basis:
 
-{% code title="app/channels/optimism_channel.rb" %}
+{% code title="app/channels/optimism\_channel.rb" %}
 ```ruby
 class OptimismChannel < ApplicationCable::Channel
   def subscribed
@@ -113,14 +113,14 @@ Finally, we need to give Optimism the ability to broadcast updates to the correc
 {% code title="config/initializers/optimism.rb" %}
 ```ruby
 Optimism.configure do |config|
-  config.channel = ->(context) { OptimismChannel.broadcasting_for(context.current_user) }
+  config.channel_proc = ->(context) { OptimismChannel.broadcasting_for(context.current_user) }
 end
 ```
 {% endcode %}
 
 ## Devise-based Authentication
 
-If you're using the versatile [Devise](https://github.com/plataformatec/devise) authentication library, your configuration is *identical* to the User-Based Authentication above, **except** for how ActionCable looks up a user:
+If you're using the versatile [Devise](https://github.com/plataformatec/devise) authentication library, your configuration is _identical_ to the User-Based Authentication above, **except** for how ActionCable looks up a user:
 
 {% code title="app/channels/application\_cable/connection.rb" %}
 ```ruby
@@ -145,5 +145,4 @@ module ApplicationCable
 end
 ```
 {% endcode %}
-
 
