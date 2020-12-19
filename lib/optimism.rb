@@ -3,22 +3,19 @@ require "optimism/version"
 require "optimism/railtie" if defined?(Rails)
 
 module Optimism
-  include CableReady::Broadcaster
-  class << self
-    mattr_accessor :channel, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
-    self.channel = ->(context) { "OptimismChannel" }
-    self.form_class = "invalid"
-    self.error_class = "error"
-    self.disable_submit = false
-    self.suffix = ""
-    self.emit_events = false
-    self.add_css = true
-    self.inject_inline = true
-    self.container_selector = "#RESOURCE_ATTRIBUTE_container"
-    self.error_selector = "#RESOURCE_ATTRIBUTE_error"
-    self.form_selector = "#RESOURCE_form"
-    self.submit_selector = "#RESOURCE_submit"
-  end
+  mattr_accessor :channel_proc, :form_class, :error_class, :disable_submit, :suffix, :emit_events, :add_css, :inject_inline, :container_selector, :error_selector, :form_selector, :submit_selector
+  self.channel_proc = ->(context) { "OptimismChannel" }
+  self.form_class = "invalid"
+  self.error_class = "error"
+  self.disable_submit = false
+  self.suffix = ""
+  self.emit_events = false
+  self.add_css = true
+  self.inject_inline = true
+  self.container_selector = "#RESOURCE_ATTRIBUTE_container"
+  self.error_selector = "#RESOURCE_ATTRIBUTE_error"
+  self.form_selector = "#RESOURCE_form"
+  self.submit_selector = "#RESOURCE_submit"
 
   def self.configure(&block)
     yield self
@@ -41,15 +38,15 @@ module Optimism
     model.valid? if model.errors.empty?
     process_resource(model, attributes, [resource])
     if model.errors.any?
-      cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
-      cable_ready[Optimism.channel[self]].add_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
-      cable_ready[Optimism.channel[self]].set_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
+      CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
+      CableReady::Channels.instance[Optimism.channel_proc[self]].add_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
+      CableReady::Channels.instance[Optimism.channel_proc[self]].set_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
     else
-      cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:form:valid", detail: {resource: resource}) if Optimism.emit_events
-      cable_ready[Optimism.channel[self]].remove_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
-      cable_ready[Optimism.channel[self]].remove_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
+      CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:form:valid", detail: {resource: resource}) if Optimism.emit_events
+      CableReady::Channels.instance[Optimism.channel_proc[self]].remove_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
+      CableReady::Channels.instance[Optimism.channel_proc[self]].remove_attribute(selector: submit_selector, name: "disabled") if Optimism.disable_submit
     end
-    cable_ready.broadcast
+    CableReady::Channels.instance.broadcast
     head :ok if defined?(head)
   end
 
@@ -81,13 +78,13 @@ module Optimism
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
     if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
       message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
-      cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
-      cable_ready[Optimism.channel[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
-      cable_ready[Optimism.channel[self]].text_content(selector: error_selector, text: message) if Optimism.inject_inline
+      CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
+      CableReady::Channels.instance[Optimism.channel_proc[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
+      CableReady::Channels.instance[Optimism.channel_proc[self]].text_content(selector: error_selector, text: message) if Optimism.inject_inline
     else
-      cable_ready[Optimism.channel[self]].dispatch_event(name: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
-      cable_ready[Optimism.channel[self]].remove_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
-      cable_ready[Optimism.channel[self]].text_content(selector: error_selector, text: "") if Optimism.inject_inline
+      CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
+      CableReady::Channels.instance[Optimism.channel_proc[self]].remove_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
+      CableReady::Channels.instance[Optimism.channel_proc[self]].text_content(selector: error_selector, text: "") if Optimism.inject_inline
     end
   end
 end
