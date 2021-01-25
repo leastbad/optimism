@@ -92,7 +92,7 @@ end
 module ActionView::Helpers
   module FormHelper
     def error_for(object_name, attribute, **options)
-      tag.span options.merge! id: error_id_for(object_name, attribute)
+      tag.span **options.merge(id: error_id_for(object_name, attribute))
     end
 
     def error_id_for(object_name, attribute)
@@ -102,7 +102,7 @@ module ActionView::Helpers
 
   class FormBuilder
     def container_for(attribute, **options, &block)
-      @template.tag.div @template.capture(&block), options.merge!(id: container_id_for(attribute)) if block_given?
+      @template.tag.div @template.capture(&block), **options.merge(id: container_id_for(attribute)) if block_given?
     end
 
     def container_id_for(attribute)
@@ -110,7 +110,7 @@ module ActionView::Helpers
     end
 
     def error_for(attribute, **options)
-      @template.error_for(object_name, attribute, options)
+      @template.error_for(object_name, attribute, **options)
     end
   end
 end
