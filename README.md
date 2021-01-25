@@ -4,8 +4,8 @@
 
 The missing drop-in solution for realtime remote form validation in Rails.
 
-{% hint style="warning" %}
-Optimism v0.4.0 now supports Rails 6.1, thanks to the efforts of [Josh LeBlanc](https://github.com/joshleblanc). 🎉
+{% hint style="success" %}
+Optimism v0.4.1 now supports Ruby 3.0.0, thanks to [Julian Rubisch](https://twitter.com/julian_rubisch) and Rails 6.1, thanks to [Josh LeBlanc](https://github.com/joshleblanc). 🎉
 {% endhint %}
 
 ## Why have optimism?
