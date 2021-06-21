@@ -21,6 +21,8 @@ else
 end
 ```
 
+
+
 ## Form Builder Helpers
 
 ### container\_for\(attribute, \*\*options, &block\)
@@ -39,6 +41,8 @@ Call this helper to create a `div` that will wrap your input element along with 
   <% end %>
 ```
 
+
+
 ### container\_id\_for\(attribute\)
 
 **attribute**: Symbol identifying the the model attribute to use
@@ -50,6 +54,8 @@ Returns the id required for a container to wrap your input elements and receive 
 ```rust
 <blockquote id="<%= form.container_id_for :name %>"></blockquote>
 ```
+
+
 
 ### error\_for\(attribute, \*\*options\)
 
@@ -64,6 +70,8 @@ Call this helper to create a `span` that you place adjacent to your your input e
 <%= form.error_for :name, class: "d-none text-danger small form-group" %>
 ```
 
+
+
 ### error\_id\_for\(attribute\)
 
 **attribute**: Symbol identifying the the model attribute to use
@@ -73,6 +81,8 @@ Returns the id required for a container to receive validation error text. Use it
 ```rust
 <blockquote id="<%= form.error_id_for :name %>"></blockquote>
 ```
+
+
 
 ![](.gitbook/assets/master_plan.svg)
 
@@ -122,6 +132,8 @@ end
 **form\_selector**: This is the pattern from which form id CSS selectors will be constructed. You probably shouldn't change this.
 
 **submit\_selector**: This is the pattern from which Submit button id CSS selectors will be constructed. You probably shouldn't change this.
+
+
 
 ## Events
 

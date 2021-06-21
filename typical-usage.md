@@ -106,7 +106,7 @@ Optimism is a fundamentally simple library, which means that inevitably, there's
 
 Thanks to a quirk of the way certain OG form input elements work, it's possible for an unchecked element to not be included in a form's parameters. For example, if you have a set of radio buttons with no default selection, your `params` hash will not include data for it.
 
-Make sure to use the `checkbox` helpers that Rails provides, which implement a clever hack to make sure that unchecked checkboxes produce a `false` value.
+Make sure to use the `checkbox` helpers that Rails provides, which implement a clever hack to make sure that unchecked checkboxes produce a `false` value in your `params`.
 
 ![](.gitbook/assets/web_developer.svg)
 
