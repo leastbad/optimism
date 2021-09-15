@@ -21,7 +21,7 @@ module Optimism
     yield self
   end
 
-  def broadcast_errors(model, attributes)
+  def broadcast_errors(model, attributes, reverse_attributes_for: [])
     return unless model&.errors&.messages
     resource = ActiveModel::Naming.param_key(model)
     form_selector, submit_selector = Optimism.form_selector.sub("RESOURCE", resource), Optimism.submit_selector.sub("RESOURCE", resource)
@@ -36,7 +36,7 @@ module Optimism
       raise Exception.new "attributes must be a Hash (Parameters, Indifferent or standard), Array, Symbol or String"
     end
     model.valid? if model.errors.empty?
-    process_resource(model, attributes, [resource])
+    process_resource(model, attributes, [resource], reverse_attributes_for: reverse_attributes_for)
     if model.errors.any?
       CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:form:invalid", detail: {resource: resource}) if Optimism.emit_events
       CableReady::Channels.instance[Optimism.channel_proc[self]].add_css_class(selector: form_selector, name: Optimism.form_class) if Optimism.form_class.present?
@@ -50,11 +50,12 @@ module Optimism
     head :ok if defined?(head)
   end
 
-  def process_resource(model, attributes, ancestry)
+  def process_resource(model, attributes, ancestry, reverse_attributes_for: [])
     attributes.keys.each do |attribute|
       if attribute.ends_with?("_attributes")
         resource = attribute[0..-12]
         association = model.send(resource.to_sym)
+        association = association.reverse if reverse_attributes_for.include?(resource.to_sym)
         if association.respond_to? :each_with_index
           association.each_with_index do |nested, index|
             process_resource(nested, attributes[attribute][index.to_s], ancestry + [resource, index]) if attributes[attribute].key?(index.to_s)
@@ -76,15 +77,22 @@ module Optimism
       resource += "_#{ancestry.shift}_attributes_#{ancestry.shift}" until ancestry.empty?
     end
     container_selector, error_selector = Optimism.container_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute), Optimism.error_selector.sub("RESOURCE", resource).sub("ATTRIBUTE", attribute)
-    if model.errors.any? && model.errors.messages.map(&:first).include?(attribute.to_sym)
-      message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
-      CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
-      CableReady::Channels.instance[Optimism.channel_proc[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
-      CableReady::Channels.instance[Optimism.channel_proc[self]].text_content(selector: error_selector, text: message) if Optimism.inject_inline
-    else
-      CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
-      CableReady::Channels.instance[Optimism.channel_proc[self]].remove_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
-      CableReady::Channels.instance[Optimism.channel_proc[self]].text_content(selector: error_selector, text: "") if Optimism.inject_inline
+    if model.errors.any?
+      if attribute.ends_with?("_id") && model.errors.messages.include?(attribute.delete_suffix("_id").to_sym)
+        model.errors.messages[attribute.delete_suffix("_id").to_sym].each do |msg|
+          model.errors.add(attribute.to_sym, msg)
+        end
+      end
+      if model.errors.messages.map(&:first).include?(attribute.to_sym)
+        message = "#{model.errors.full_message(attribute.to_sym, model.errors.messages[attribute.to_sym].first)}#{Optimism.suffix}"
+        CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:attribute:invalid", detail: {resource: resource, attribute: attribute, text: message}) if Optimism.emit_events
+        CableReady::Channels.instance[Optimism.channel_proc[self]].add_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
+        CableReady::Channels.instance[Optimism.channel_proc[self]].text_content(selector: error_selector, text: message) if Optimism.inject_inline
+      else
+        CableReady::Channels.instance[Optimism.channel_proc[self]].dispatch_event(name: "optimism:attribute:valid", detail: {resource: resource, attribute: attribute}) if Optimism.emit_events
+        CableReady::Channels.instance[Optimism.channel_proc[self]].remove_css_class(selector: container_selector, name: Optimism.error_class) if Optimism.add_css
+        CableReady::Channels.instance[Optimism.channel_proc[self]].text_content(selector: error_selector, text: "") if Optimism.inject_inline
+      end
     end
   end
 end

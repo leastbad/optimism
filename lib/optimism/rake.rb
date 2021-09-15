@@ -16,7 +16,7 @@ task :"optimism:install" do
       $stderr.puts "=> [ skipping ] #{channel[:app_path]} already exists"
     else
       FileUtils.cp(File.expand_path(channel[:template_path], __dir__), "./#{channel[:app_path]}")
-      $stderr.puts "=> #{channel[:app_path]} created"
+      $stdout.puts "=> #{channel[:app_path]} created"
     end
   end
 end

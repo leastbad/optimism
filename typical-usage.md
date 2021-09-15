@@ -27,17 +27,17 @@ Now that you have seen what Optimism can do, let's flex our muscles a bit and se
 {% endcode %}
 {% endtab %}
 
-{% tab title="Bootstrap 4" %}
+{% tab title="Bootstrap" %}
 {% code title="app/views/posts/\_form.html.erb" %}
 ```rust
 <%= form_with(model: post, id: "posts_form") do |form| %>
-  <%= form.container_for :name, class: "form-group" do %>
+  <%= form.container_for :name, class: "input-group" do %>
     <%= form.label :name %>
     <%= form.text_field :name, class: "form-control" %>
     <%= form.error_for :name, class: "small align-bottom text-danger d-none" %>
   <% end %>
 
-  <%= form.container_for :body, class: "form-group" do %>
+  <%= form.container_for :body, class: "input-group" do %>
     <%= form.label :body %>
     <%= form.text_area :body, class: "form-control" %>
     <%= form.error_for :body, class: "small align-bottom text-danger d-none" %>
@@ -76,14 +76,14 @@ Here we introduce the `container_for` helper, which wraps a form element in a `d
 ```
 {% endtab %}
 
-{% tab title="Bootstrap 4" %}
+{% tab title="Bootstrap" %}
 ```css
-.form-group.error > .d-none {
+.input-group.error > .d-none {
   display: inline !important;
 }
 
-.form-group.error > input,
-.form-group.error > textarea {
+.input-group.error > input,
+.input-group.error > textarea {
   background-color: rgba(255, 239, 213, 0.7);
 }
 ```
@@ -97,6 +97,16 @@ If you assign an id to the form itself that matches the expected format - in thi
 {% hint style="info" %}
 Unfortunately, we can't automatically generate the id for the form during its own declaration. Luckily, the format is pretty easy: **resources\_form**.
 {% endhint %}
+
+## Gotchas
+
+Optimism is a fundamentally simple library, which means that inevitably, there's going to be scenarios that require some extra consideration.
+
+#### Radio buttons and checkboxes
+
+Thanks to a quirk of the way certain OG form input elements work, it's possible for an unchecked element to not be included in a form's parameters. For example, if you have a set of radio buttons with no default selection, your `params` hash will not include data for it.
+
+Make sure to use the `checkbox` helpers that Rails provides, which implement a clever hack to make sure that unchecked checkboxes produce a `false` value in your `params`.
 
 ![](.gitbook/assets/web_developer.svg)
 
