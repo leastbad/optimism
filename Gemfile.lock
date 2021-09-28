@@ -4,7 +4,7 @@ PATH
     optimism (0.3.5)
       cable_ready (>= 4.4.6)
       rack (~> 2.0)
-      rails (>= 6, >= 5.2)
+      rails (>= 5.2)
 
 GEM
   remote: https://rubygems.org/
@@ -93,10 +93,10 @@ GEM
     mini_portile2 (2.6.1)
     minitest (5.14.4)
     nio4r (2.5.8)
-    nokogiri (1.12.3)
+    nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
-    nokogiri (1.12.3-x64-mingw32)
+    nokogiri (1.12.5-x64-mingw32)
       racc (~> 1.4)
     parallel (1.19.1)
     parser (2.7.0.2)
