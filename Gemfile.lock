@@ -3,7 +3,7 @@ PATH
   specs:
     optimism (0.3.5)
       cable_ready (>= 4.4.6)
-      rack (~> 2.0)
+      rack (>= 2, < 4)
       rails (>= 5.2)
 
 GEM
@@ -105,7 +105,7 @@ GEM
     pry-nav (0.3.0)
       pry (>= 0.9.10, < 0.13.0)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.4)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.1.4.1)
